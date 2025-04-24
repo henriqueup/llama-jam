@@ -6,9 +6,13 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { useEffect } from "react";
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { Navigation } from "./components/Navigation";
+import LoadingSpinner from "./components/LoadingSpinner";
+import { useGlobalStore } from "./store/global";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -32,7 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="h-screen bg-background text-popover-foreground">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -42,7 +46,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const { isLoading } = useGlobalStore();
+
+  return (
+    <>
+      <Navigation />
+      <div className="h-[calc(100%_-_32px)] text-inherit">
+        <Outlet />
+      </div>
+      {isLoading ? (
+        <div className="absolute left-0 top-0 z-[60] h-screen w-full">
+          <LoadingSpinner className="bg-background/80 backdrop-blur-sm transition-opacity" />
+        </div>
+      ) : null}
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
