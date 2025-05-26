@@ -1,0 +1,465 @@
+Hey chat, I'd like you to help me write a product requirements document (PRD) for a system I want to build called "LlamaJam". I'll explain what the system is below, but I want you to feel free to ask me for any more additional information you may need.
+
+LlamaJam is a library of songs represented in "tablature" notation (a simplified representation similar to sheet music). In it, users will be able to do mainly 2 things: write new tablatures or edit existing ones and playback existing songs. In order to do these things, there will need to be an editor, where tablatures are created and maintained, and a way to search for existing songs.
+
+Songs will be constructed with a collection of tablatures or Sheets for different Instruments. For example there can be a song with 3 sheets: guitar, drums and bass. So there needs to also be a way for users to setup Instruments. Instruments can be of 2 types: melodic or percussion. And they'll have a concept of "tracks", which means how many channels from which that instrument can produce sound. E.g. a regular guitar has 6 strings or tracks, pianos and keyboards can have many keys, drum sets can have many parts.
+
+A Sheet will always be associated to an Instrument and will represent the tracks of that Instrument along the Bars and beats of the Song. Each track will have Notes placed in them according to how they are played during the Song.
+
+---------------------------------------------------------------------------------------------------------
+
+Thanks! That’s a great start — you’ve clearly thought through the core concepts of LlamaJam. To draft a comprehensive Product Requirements Document (PRD), I'll need to gather a bit more detail in several areas. I’ll start with some questions to clarify scope, functionality, and user experience, and then I can proceed to structure the PRD for you.
+
+### Questions to Clarify LlamaJam:
+
+1. **User Roles and Permissions**
+
+   * Will there be different types of users (e.g. guest, registered user, admin)?
+   * Can any user edit any song, or will song ownership/permissions be implemented?
+
+2. **Song Playback**
+
+   * What kind of playback are you envisioning? Synthesized sounds (e.g., MIDI-style playback), or something else?
+   * Should the playback reflect instrument types (e.g., drums sound like drums)?
+
+3. **Editor Capabilities**
+
+   * Should the tablature editor be graphical (drag-and-drop, click-to-place-notes) or text-based?
+   * Will there be undo/redo, copy/paste, or loop playback features?
+
+4. **Instrument Configuration**
+
+   * Will users create custom instruments, or select from a predefined list?
+   * For melodic instruments, is pitch (note height) per track configurable?
+   * For percussion instruments, do you expect to map specific sounds to tracks (e.g., snare = track 1)?
+
+5. **Search Functionality**
+
+   * What metadata will users be able to search by (e.g., title, instrument type, tags, tempo)?
+   * Should there be filters or advanced search options?
+
+6. **Collaboration & Sharing**
+
+   * Will users be able to collaborate on a song in real-time or share their compositions with others?
+   * Will songs be public by default or private?
+
+7. **Platform**
+
+   * Is this a web-based app, mobile app, desktop software, or cross-platform?
+   * Are there any frontend/backend tech preferences or constraints?
+
+8. **Future Features**
+
+   * Do you foresee features like exporting songs (PDF, MIDI, audio), version history, or community features (likes, comments)?
+
+Once you’ve answered these, I’ll draft the PRD with:
+
+* Overview
+* Goals
+* User Stories
+* Functional Requirements
+* Non-Functional Requirements
+* Success Metrics
+* Open Questions
+
+Let me know if you want to add or change the PRD structure!
+
+---------------------------------------------------------------------------------------------------------
+
+Great questions! Generally we'll be working on the MVP for now, so most of it might be changed in the future. Here are the answers:
+
+1. Initially there will only be one generic user type. They'll sign up using their email and setting up a password. Any user will be able to edit any song.
+2.  Playback will be synthetic based on the browser's WebAudio API. Ideally each instrument will have its AudioContext customized to resemble how that instrument sounds. There will be a static set of synthesizers for each major instrument group.
+3. The editor will be graphical, with drag-and-drop and clicking support. There will be undo/redo and copy/paste features in the MVP.
+4. In the MVP, only a list of predefined instruments will be available. Melodic instruments will have each track's pitch already defined. And percussion instruments will have each track sound mapped.
+5. The MVP will only support searching by song title and artist. No need for any other advanced search for now.
+6. There won't be any real-time collaboration, but all songs will be public. Once published they'll be accessible and editable by all other users.
+7. This is a web-based app. It will be built using TanStack Start - meaning a full-stack JavaScript app. We can go into more details on the technical parts later.
+8. Yes, after the MVP there will likely be features such as versioning and community interactions. There will also be a page to allow for Instrument customization. Also improvements to the user management, with admins and moderation.
+
+---------------------------------------------------------------------------------------------------------
+
+Perfect — thanks for the detailed answers! Based on what you shared, here’s a **Product Requirements Document (PRD)** draft for **LlamaJam MVP**.
+
+---
+
+## **Product Requirements Document (PRD) – LlamaJam MVP**
+
+### **1. Overview**
+
+**LlamaJam** is a web-based platform that enables users to create, edit, and share songs using a simplified tablature system. Songs consist of Sheets for predefined Instruments and support playback via the WebAudio API. The MVP focuses on building a foundational editor experience, enabling playback, and allowing open collaboration through a public song library.
+
+---
+
+### **2. Goals**
+
+* Enable users to write and edit tablature-based music using a graphical editor.
+* Allow playback of compositions using WebAudio-based instrument synthesizers.
+* Provide a searchable library of public songs.
+* Establish a foundation for user management and extensibility in future versions.
+
+---
+
+### **3. Core Features**
+
+#### **3.1 User Management**
+
+* Email/password sign-up and login.
+* Generic user role with edit access to all songs.
+* Basic profile management (email, password reset).
+
+#### **3.2 Song Management**
+
+* Create new songs (with title and artist fields).
+* Add and remove Sheets (i.e. instrument parts) to/from a song.
+* All songs are public and editable by any user.
+
+#### **3.3 Tablature Editor**
+
+* Graphical editor interface:
+
+  * Drag-and-drop note placement.
+  * Click-to-edit support.
+  * Copy, paste, undo, redo operations.
+* Display tracks per instrument and align notes by bars and beats.
+* Sheet structure adheres to the selected Instrument's type and tracks.
+
+#### **3.4 Instrument System**
+
+* Predefined list of Instruments:
+
+  * **Melodic:** e.g., Guitar, Keyboard
+  * **Percussion:** e.g., Drum Kit
+* Instruments define:
+
+  * Type (Melodic/Percussion)
+  * Number of tracks (e.g., 6 for guitar)
+  * Track mapping (pitch or percussion hit sound)
+
+#### **3.5 Playback Engine**
+
+* Utilize WebAudio API for real-time playback.
+* Basic synth sounds mapped to instrument types.
+* Playback synchronizes across all sheets in a song.
+
+#### **3.6 Search and Browse**
+
+* Search songs by:
+
+  * Title
+  * Artist
+* View list of all public songs.
+
+---
+
+### **4. User Stories**
+
+* As a user, I want to create a new song and add instruments so I can start composing.
+* As a user, I want to drag and drop notes in a tablature so I can easily write music.
+* As a user, I want to play back my song so I can hear how it sounds.
+* As a user, I want to search for existing songs by title or artist so I can find something specific.
+* As a user, I want to edit any public song so I can contribute or remix.
+
+---
+
+### **5. Functional Requirements**
+
+#### **Authentication**
+
+* Sign-up form with email/password.
+* Login/logout session handling.
+
+#### **Song Structure**
+
+* Data model supports multiple Sheets per Song.
+* Each Sheet is associated with one Instrument.
+
+#### **Editor**
+
+* Note placement grid aligned with bars and beats.
+* Instrument tracks displayed as horizontal rows.
+* Interaction:
+
+  * Place/remove notes
+  * Drag to reposition
+  * Multi-select for copy/paste
+
+#### **Playback**
+
+* Start/stop playback controls.
+* Synchronized across all Sheets.
+* Metronome and tempo setting optional (MVP+).
+
+#### **Instruments**
+
+* Hardcoded list with:
+
+  * Name
+  * Type
+  * Track count
+  * Sound mapping
+
+#### **Search**
+
+* Case-insensitive match on song title or artist.
+* Return list of results with basic metadata.
+
+---
+
+### **6. Non-Functional Requirements**
+
+* Responsive design for modern browsers.
+* Minimal latency for playback.
+* Secure user authentication and session management.
+* Codebase using TanStack Start and modern JavaScript/TypeScript practices.
+
+---
+
+### **7. Success Metrics (MVP)**
+
+* Users can create and publish a song with at least one sheet.
+* Users can edit notes and hear accurate playback of the song.
+* Users can find a song using search.
+* Users can edit another user's song.
+* System has no critical bugs or crashes during editing/playback.
+
+---
+
+### **8. Out of Scope (MVP)**
+
+* Real-time collaboration
+* Instrument customization
+* Role-based permissions (e.g., admins)
+* Version control or history
+* Advanced search filters (genre, tempo, etc.)
+* Exporting (PDF, MIDI, audio)
+* Community features (likes, comments)
+
+---
+
+### **9. Open Questions**
+
+* Should the system autosave user edits, or require manual saving?
+* Should the song metadata (e.g., title, artist) be editable after creation?
+* How are note durations, rests, and tied notes represented in tablature?
+
+---
+
+Would you like me to help you turn this into a project board or break it down into a technical architecture next?
+
+---------------------------------------------------------------------------------------------------------
+
+Yes, as a next step could you please build a technical architecture document?
+
+To elaborate in the technical aspects, here are the technologies I intend to build the system with:
+- TanStack Start (React)
+  - TanStack Router
+  - TanStack Query
+  - TanStack Table
+  - Vite / Nitro.js
+- Shadcn / Radix UI for the UI components
+- Zod
+- TailwindCSS
+- Zustand / immer
+- Lucide for icons
+- better-sqlite3
+
+Since it uses TanStack Start, which is a full-tack framework, it'll encompass the back-end as well. It will be structured using a layered approach. The entry or top layer will have the Server Function definitions, then there will be a Business layer with the entities and use cases (or services), and a Repository layer which in the MVP will use SQLite.
+
+---------------------------------------------------------------------------------------------------------
+
+Thanks for the added detail — it's clear you’re taking a modern and well-structured approach to LlamaJam. Below is a **Technical Architecture Document** tailored for your stack and the MVP feature set.
+
+---
+
+## **Technical Architecture Document – LlamaJam MVP**
+
+---
+
+### **1. Overview**
+
+LlamaJam is a full-stack web application for collaborative tablature music composition. Built using [TanStack Start](https://tanstack.com/start), the architecture follows a layered structure with clear separation of concerns between the server interface, business logic, and data access. This document outlines the technical components, frameworks, and architectural patterns used.
+
+---
+
+### **2. Tech Stack**
+
+| Layer              | Technology                                   |
+| ------------------ | -------------------------------------------- |
+| Frontend UI        | React (via TanStack Start), Shadcn, Radix UI |
+| Styling            | TailwindCSS                                  |
+| State Management   | Zustand + Immer                              |
+| Forms & Validation | Zod                                          |
+| Routing            | TanStack Router                              |
+| Data Fetching      | TanStack Query                               |
+| Icons              | Lucide                                       |
+| Server Runtime     | TanStack Start (Nitro.js)                    |
+| Database           | SQLite (via better-sqlite3)                  |
+| ORM/DB Layer       | Custom Repository Layer                      |
+
+---
+
+### **3. Architecture Diagram**
+
+```
+┌────────────────────────┐
+│        Client UI       │
+│  - Shadcn/Radix UI     │
+│  - Zustand/Immer       │
+│  - TailwindCSS         │
+└────────────┬───────────┘
+             │
+             ▼
+┌────────────────────────┐
+│    TanStack Router     │
+│    (Pages/Routes)      │
+└────────────┬───────────┘
+             ▼
+┌────────────────────────┐
+│    Server Functions    │  ← RPC-style entry points (e.g., /api/song/create)
+└────────────┬───────────┘
+             ▼
+┌────────────────────────┐
+│   Business Logic Layer │  ← Entities, Services/Use Cases
+└────────────┬───────────┘
+             ▼
+┌────────────────────────┐
+│   Repository Layer     │  ← SQLite-based data access
+│   (better-sqlite3)     │
+└────────────────────────┘
+```
+
+---
+
+### **4. Layers Explained**
+
+#### **4.1 Client UI (Presentation Layer)**
+
+* **Purpose**: User interaction and UI rendering.
+* **Key Tools**:
+
+  * **Shadcn/Radix UI** for accessible components.
+  * **TailwindCSS** for styling.
+  * **Zustand/Immer** for local UI state (e.g., editor selections, modals).
+  * **TanStack Query** for remote state (data fetching, caching).
+  * **Lucide** for iconography.
+
+#### **4.2 Server Functions (API Layer)**
+
+* **Purpose**: Define RPC-style endpoints (functions executed via HTTP).
+* **Pattern**: Thin controllers that validate input (Zod), delegate to business logic, and return results or errors.
+
+#### **4.3 Business Logic (Use Cases / Domain Layer)**
+
+* **Purpose**: Application-specific rules and orchestration.
+* **Structure**:
+
+  * **Entities**: e.g., Song, Sheet, Instrument.
+  * **Use Cases / Services**: e.g., `CreateSong`, `UpdateSheet`, `SearchSongs`.
+
+#### **4.4 Repository Layer**
+
+* **Purpose**: Encapsulate direct database access using `better-sqlite3`.
+* **Design**:
+
+  * **Repositories per Entity**: e.g., `SongRepository`, `SheetRepository`.
+  * Abstracted to allow for future replacement (e.g., switch to PostgreSQL).
+  * All queries prepared and strongly typed.
+
+---
+
+### **5. Database Schema (Initial Draft)**
+
+#### **Tables**
+
+```sql
+users (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL
+)
+
+songs (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  artist TEXT NOT NULL,
+  created_by TEXT NOT NULL REFERENCES users(id),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+
+instruments (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT CHECK(type IN ('melodic', 'percussion')),
+  track_count INTEGER NOT NULL
+)
+
+sheets (
+  id TEXT PRIMARY KEY,
+  song_id TEXT NOT NULL REFERENCES songs(id),
+  instrument_id TEXT NOT NULL REFERENCES instruments(id)
+)
+
+notes (
+  id TEXT PRIMARY KEY,
+  sheet_id TEXT NOT NULL REFERENCES sheets(id),
+  track_index INTEGER NOT NULL,
+  bar INTEGER NOT NULL,
+  beat INTEGER NOT NULL,
+  pitch_or_sound TEXT NOT NULL
+)
+```
+
+> 📝 *You could normalize note-specific values further depending on how much detail you store (e.g., duration, tie, etc.)*
+
+---
+
+### **6. State Management Strategy**
+
+* **Global state** (Zustand): Editor UI state, selected instrument, note selections.
+* **Remote state** (TanStack Query): Fetched song data, instrument list, playback settings.
+* **Transient state** (React local): Modals, tooltips, focus states.
+
+---
+
+### **7. Routing & Navigation**
+
+* Built with **TanStack Router**
+* File-based route organization:
+
+  ```
+  /songs                → list all public songs
+  /songs/[id]           → view/edit song
+  /songs/new            → create song
+  /auth/login           → login form
+  /auth/register        → registration form
+  ```
+
+---
+
+### **8. Security Considerations**
+
+* Passwords hashed using a secure algorithm (e.g., bcrypt).
+* Input validation with Zod on both client and server.
+* No authorization logic (all songs editable by all users) in MVP.
+
+---
+
+### **9. Future Scalability**
+
+* Replace SQLite with a scalable RDBMS (PostgreSQL).
+* Add authentication providers (OAuth).
+* Introduce RBAC (admin/mod roles).
+* Modularize instruments as user-generated content.
+
+---
+
+### **10. Development & Deployment**
+
+* **Dev Server**: Vite for hot reload + TypeScript support.
+* **Build Tooling**: Nitro for server bundling.
+* **Hosting Options**: Vercel, Netlify, or a custom Node host (due to server functions).
+
+---
+
+Would you like me to generate boilerplate file structures or scaffolding commands for the project next? Or would a breakdown of tasks for sprint planning be more useful at this stage?
