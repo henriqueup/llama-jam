@@ -46,6 +46,9 @@ Implement the data layer for:
 
    - SongRepository
    - InstrumentRepository
+   - SheetRepository
+   - BarRepository
+   - NoteRepository
 
 3. Implement business layer use cases:
    - CreateSong

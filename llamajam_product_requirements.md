@@ -127,6 +127,7 @@ LlamaJam is a web-based tablature library that enables users to create, edit, an
   - `name`
   - `type` (`melodic` | `percussion`)
   - `trackCount`
+  - `tuning` (comma separated e.g. guitar standard tuning: "E4,B3,G3,D3,A2,E2")
 
 - **Sheet**
 
