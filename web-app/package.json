@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "vinxi start",
+    "seed": "tsx src/server/db/seed.ts"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.14",

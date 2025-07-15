@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS songs (
   title TEXT NOT NULL,
   artist TEXT NOT NULL,
   difficulty TEXT CHECK(difficulty IN ('beginner', 'intermediate', 'advanced')),
+  tempo INTEGER NOT NULL CHECK(tempo > 0),
   user_id TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(user_id) REFERENCES users(id)

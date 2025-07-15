@@ -11,6 +11,7 @@ export const SongSchema = z.object({
   title: z.string(),
   artist: z.string(),
   difficulty: z.enum(SongDifficulties),
+  tempo: z.number().int().positive(),
   userId: z.string(),
 });
 
