@@ -1,5 +1,3 @@
-import { Database } from "better-sqlite3";
-import { nanoid } from "nanoid";
 import { getDatabase } from "./config";
 import { initializeDatabase, runMigrations } from "./migrations";
 
@@ -30,23 +28,6 @@ const defaultInstruments: DefaultInstrument[] = [
   },
 ];
 
-async function seedDefaultInstruments(db: Database) {
-  const stmt = db.prepare(`
-    INSERT OR IGNORE INTO instruments (id, name, type, track_count, tuning)
-    VALUES (?, ?, ?, ?, ?)
-  `);
-
-  for (const instrument of defaultInstruments) {
-    stmt.run(
-      nanoid(),
-      instrument.name,
-      instrument.type,
-      instrument.trackCount,
-      instrument.tuning || null
-    );
-  }
-}
-
 export async function initializeLlamaJamDb() {
   const db = getDatabase();
 
@@ -54,8 +35,6 @@ export async function initializeLlamaJamDb() {
     await initializeDatabase(db);
 
     await runMigrations(db);
-
-    await seedDefaultInstruments(db);
 
     console.log("Database initialization completed successfully");
   } catch (error) {
