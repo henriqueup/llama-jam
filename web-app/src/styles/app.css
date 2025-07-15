@@ -24,31 +24,31 @@
 
 @layer base {
   :root {
-    --background: var(--color-blue-200);
-    --foreground: var(--color-black);
-    --primary: var(--color-black);
-    --primary-foreground: var(--color-gray-100);
-    --secondary: var(--color-blue-100);
-    --secondary-foreground: var(--color-black);
-    --muted: var(--color-blue-100);
-    --muted-foreground: var(--color-gray-800);
-    --accent: var(--color-blue-100);
-    --accent-foreground: var(--color-black);
+    --background: var(--color-amber-100);
+    --foreground: var(--color-stone-950);
+    --primary: var(--color-stone-950);
+    --primary-foreground: var(--color-amber-100);
+    --secondary: var(--color-amber-200);
+    --secondary-foreground: var(--color-stone-950);
+    --muted: var(--color-amber-200);
+    --muted-foreground: var(--color-stone-800);
+    --accent: var(--color-amber-200);
+    --accent-foreground: var(--color-stone-950);
     --destructive: var(--color-red-800);
     --destructive-foreground: var(--color-black);
   }
 
   .dark {
-    --background: var(--color-slate-900);
-    --foreground: var(--color-gray-100);
-    --primary: var(--color-gray-100);
-    --primary-foreground: var(--color-black);
-    --secondary: var(--color-slate-800);
-    --secondary-foreground: var(--color-gray-100);
-    --muted: var(--color-slate-800);
-    --muted-foreground: var(--color-gray-200);
-    --accent: var(--color-slate-800);
-    --accent-foreground: var(--color-gray-100);
+    --background: var(--color-stone-950);
+    --foreground: var(--color-amber-100);
+    --primary: var(--color-amber-100);
+    --primary-foreground: var(--color-stone-950);
+    --secondary: var(--color-stone-800);
+    --secondary-foreground: var(--color-amber-100);
+    --muted: var(--color-stone-800);
+    --muted-foreground: var(--color-amber-200);
+    --accent: var(--color-stone-800);
+    --accent-foreground: var(--color-amber-100);
     --destructive: var(--color-red-800);
     --destructive-foreground: var(--color-gray-100);
   }
