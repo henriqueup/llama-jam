@@ -29,7 +29,7 @@ Main phases:
 
 1.  **User Model**: Create the `User` model and repository.
 2.  **Password Hashing**: Set up `bcrypt` for secure password hashing.
-3.  **API Routes**: Add authentication routes (`/login`, `/register`, `/logout`).
+3.  **API Routes**: Add authentication server functions (`/login`, `/register`, `/logout`).
 4.  **Session Management**: Implement session handling to manage user login state.
 5.  **Protected Routes**: Create middleware to protect routes that require authentication.
 

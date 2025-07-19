@@ -75,6 +75,7 @@ LlamaJam uses a **Layered Architecture**:
     utils.ts
   /state                    # Zustand stores
   /server
+    /functions                # Server functions
     /services                 # Business logic (use cases) e.g. create Song, update Song
     /entities                 # Domain models (Zod + TypeScript types) and operations (e.g. add a Note to a Bar)
     /repositories             # Database access logic

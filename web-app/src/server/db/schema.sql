@@ -45,12 +45,12 @@ CREATE TABLE IF NOT EXISTS sheets (
 CREATE TABLE IF NOT EXISTS bars (
   id TEXT PRIMARY KEY,
   sheet_id TEXT NOT NULL,
-  index INTEGER NOT NULL, -- position in sheet
+  "index" INTEGER NOT NULL, -- position in sheet
   beat_count INTEGER NOT NULL CHECK(beat_count > 0),
   beat_duration TEXT NOT NULL, -- stored as fraction e.g. '1/4'
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(sheet_id) REFERENCES sheets(id) ON DELETE CASCADE,
-  UNIQUE(sheet_id, index)
+  UNIQUE(sheet_id, "index")
 );
 
 -- Notes table
