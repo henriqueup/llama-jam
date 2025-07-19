@@ -11,3 +11,5 @@ export async function startupTasks() {
     throw error;
   }
 }
+
+startupTasks().then(() => console.log("Server started successfully"));

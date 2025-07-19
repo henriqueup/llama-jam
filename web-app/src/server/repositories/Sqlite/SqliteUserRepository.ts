@@ -1,7 +1,7 @@
-import { getDatabase } from "../db/config";
-import type { User } from "../entities/User";
-import type { IUserRepository } from "./UserRepository";
 import { nanoid } from "nanoid";
+import { getDatabase } from "~/server/db/config";
+import { User } from "~/server/entities/User";
+import { IUserRepository } from "../UserRepository";
 
 export class SqliteUserRepository implements IUserRepository {
   private db = getDatabase();

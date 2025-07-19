@@ -11,10 +11,24 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as RegisterRouteImport } from './routes/register.route'
+import { Route as LoginRouteImport } from './routes/login.route'
 import { Route as EditorRouteImport } from './routes/editor.route'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const RegisterRouteRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRouteRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const EditorRouteRoute = EditorRouteImport.update({
   id: '/editor',
@@ -46,6 +60,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditorRouteImport
       parentRoute: typeof rootRoute
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +82,46 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/editor': typeof EditorRouteRoute
+  '/login': typeof LoginRouteRoute
+  '/register': typeof RegisterRouteRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/editor': typeof EditorRouteRoute
+  '/login': typeof LoginRouteRoute
+  '/register': typeof RegisterRouteRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/editor': typeof EditorRouteRoute
+  '/login': typeof LoginRouteRoute
+  '/register': typeof RegisterRouteRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/editor'
+  fullPaths: '/' | '/editor' | '/login' | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/editor'
-  id: '__root__' | '/' | '/editor'
+  to: '/' | '/editor' | '/login' | '/register'
+  id: '__root__' | '/' | '/editor' | '/login' | '/register'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EditorRouteRoute: typeof EditorRouteRoute
+  LoginRouteRoute: typeof LoginRouteRoute
+  RegisterRouteRoute: typeof RegisterRouteRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EditorRouteRoute: EditorRouteRoute,
+  LoginRouteRoute: LoginRouteRoute,
+  RegisterRouteRoute: RegisterRouteRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +135,9 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/editor"
+        "/editor",
+        "/login",
+        "/register"
       ]
     },
     "/": {
@@ -105,6 +145,12 @@ export const routeTree = rootRoute
     },
     "/editor": {
       "filePath": "editor.route.tsx"
+    },
+    "/login": {
+      "filePath": "login.route.tsx"
+    },
+    "/register": {
+      "filePath": "register.route.tsx"
     }
   }
 }
