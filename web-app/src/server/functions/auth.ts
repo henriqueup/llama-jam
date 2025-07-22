@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
-import bcrypt from "bcrypt";
 import { BadRequestError } from "../errors";
 import { errorHandlingMiddleware, loggingMiddleware } from "../middleware";
+import { SessionService } from "../services/SessionService";
 import { UserService } from "../services/UserService";
-import { createSession } from "../utils/session";
+import { createSession, parseSession } from "../utils/session";
 
 export const registerUser = createServerFn({ method: "POST" })
   .middleware([loggingMiddleware, errorHandlingMiddleware])
@@ -51,18 +51,22 @@ export const loginUser = createServerFn({ method: "POST" })
   })
   .handler(async ({ data: { email, password } }) => {
     const userService = new UserService();
-    const user = await userService.getUserByEmail(email);
-
-    if (!user) {
-      throw new BadRequestError("Invalid email or password");
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
-
-    if (!passwordMatch) {
-      throw new BadRequestError("Invalid email or password");
-    }
+    const user = await userService.authenticateUser(email, password);
 
     createSession(user.id);
     return { id: user.id, email: user.email };
+  });
+
+export const getCurrentUser = createServerFn({ method: "GET" })
+  .middleware([loggingMiddleware, errorHandlingMiddleware])
+  .handler(async () => {
+    const sessionId = parseSession();
+    if (!sessionId) return null;
+
+    const sessionService = new SessionService();
+    const user = await sessionService.getUserFromSession(sessionId);
+
+    if (!user) return null;
+
+    return { user };
   });

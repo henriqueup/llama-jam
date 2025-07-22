@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { FieldErrors } from "~/components/forms";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/register")({
 });
 
 function RegisterComponent() {
-  const mutation = useMutation({ mutationFn: registerUser });
+  const mutation = useMutation({ mutationFn: useServerFn(registerUser) });
 
   const form = useForm({
     defaultValues: {

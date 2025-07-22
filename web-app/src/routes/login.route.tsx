@@ -1,6 +1,7 @@
 import { useForm, useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { FieldErrors, FormError } from "~/components/forms";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/login")({
 
 function LoginComponent() {
   const mutation = useMutation({
-    mutationFn: loginUser,
+    mutationFn: useServerFn(loginUser),
     onSuccess: () => {
       throw redirect({ to: "/" });
     },

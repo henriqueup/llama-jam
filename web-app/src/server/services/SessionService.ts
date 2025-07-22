@@ -1,11 +1,12 @@
-import { UserService } from "./UserService";
-import { SqliteSessionRepository } from "../repositories/Sqlite/SqliteSessionRepository";
 import { Session } from "../entities/Session";
+import { UserResponse } from "../entities/User";
+import { SqliteSessionRepository } from "../repositories/Sqlite/SqliteSessionRepository";
+import { UserService } from "./UserService";
 
 export interface ISessionService {
   createSession(userId: string): Promise<Session>;
   getSession(sessionId: string): Promise<Session | null>;
-  getUserFromSession(sessionId: string): Promise<any | null>; // TODO: Define User type
+  getUserFromSession(sessionId: string): Promise<UserResponse | null>;
   deleteSession(sessionId: string): Promise<void>;
 }
 
