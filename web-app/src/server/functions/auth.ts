@@ -1,7 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
+import { setHeader } from "@tanstack/react-start/server";
 import bcrypt from "bcrypt";
 import { BadRequestError } from "../errors";
 import { errorHandlingMiddleware, loggingMiddleware } from "../middleware";
+import { SessionService } from "../services/SessionService";
 import { UserService } from "../services/UserService";
 
 export const registerUser = createServerFn({ method: "POST" })
@@ -26,7 +28,7 @@ export const registerUser = createServerFn({ method: "POST" })
     const userService = new UserService();
     const user = await userService.createUser({ email, password });
 
-    // Here you would typically create a session as well
+    createSession(user.id);
     return { id: user.id, email: user.email };
   });
 
@@ -62,6 +64,13 @@ export const loginUser = createServerFn({ method: "POST" })
       throw new BadRequestError("Invalid email or password");
     }
 
-    // Here you would typically create a session and return a session token
+    createSession(user.id);
     return { id: user.id, email: user.email };
   });
+
+async function createSession(userId: string) {
+  const sessionService = new SessionService();
+  const session = await sessionService.createSession(userId);
+
+  setHeader("Set-Cookie", `session_id=${session.id}; HttpOnly; Path=/;`);
+}
