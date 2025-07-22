@@ -1,10 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
-import { setHeader } from "@tanstack/react-start/server";
 import bcrypt from "bcrypt";
 import { BadRequestError } from "../errors";
 import { errorHandlingMiddleware, loggingMiddleware } from "../middleware";
-import { SessionService } from "../services/SessionService";
 import { UserService } from "../services/UserService";
+import { createSession } from "../utils/session";
 
 export const registerUser = createServerFn({ method: "POST" })
   .middleware([loggingMiddleware, errorHandlingMiddleware])
@@ -67,10 +66,3 @@ export const loginUser = createServerFn({ method: "POST" })
     createSession(user.id);
     return { id: user.id, email: user.email };
   });
-
-async function createSession(userId: string) {
-  const sessionService = new SessionService();
-  const session = await sessionService.createSession(userId);
-
-  setHeader("Set-Cookie", `session_id=${session.id}; HttpOnly; Path=/;`);
-}

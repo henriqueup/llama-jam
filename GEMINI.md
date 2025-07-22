@@ -69,5 +69,5 @@ The login workflow shows an example of the complete base structure for pages and
     - general utils for the whole app
   - web-app/src/components/utils.ts
     - UI component utils
-  - web-app/src/server/utils.ts
+  - web-app/src/server/utils/
     - Server specific utils

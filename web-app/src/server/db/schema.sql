@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
   created_at INTEGER NOT NULL, -- Unix timestamp
+  expires_at INTEGER NOT NULL, -- Unix timestamp
   FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

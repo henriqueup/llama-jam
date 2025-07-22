@@ -1,22 +1,26 @@
 import { nanoid } from "nanoid";
 import { getDatabase } from "../../db/config";
 import { Session } from "../../entities/Session";
-import { SessionRepository } from "../SessionRepository";
+import { CreateSession, SessionRepository } from "../SessionRepository";
 
 export class SqliteSessionRepository implements SessionRepository {
   private db = getDatabase();
 
-  async createSession(userId: string): Promise<Session> {
+  async createSession(session: CreateSession): Promise<Session> {
     const newSession = {
       id: nanoid(),
-      userId,
-      createdAt: Date.now(),
+      ...session,
     };
 
     const stmt = this.db.prepare(
-      "INSERT INTO sessions (id, user_id, created_at) VALUES (?, ?, ?)"
+      "INSERT INTO sessions (id, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)"
     );
-    stmt.run(newSession.id, newSession.userId, newSession.createdAt);
+    stmt.run(
+      newSession.id,
+      newSession.userId,
+      newSession.createdAt,
+      newSession.expiresAt
+    );
 
     return newSession;
   }

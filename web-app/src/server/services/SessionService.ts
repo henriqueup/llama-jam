@@ -13,7 +13,14 @@ export class SessionService implements ISessionService {
   constructor(private sessionRepository = new SqliteSessionRepository()) {}
 
   async createSession(userId: string) {
-    return this.sessionRepository.createSession(userId);
+    const createdAt = Date.now();
+    const expiresAt = createdAt + 60 * 60 * 1000; // 1 hour in milliseconds
+
+    return this.sessionRepository.createSession({
+      userId,
+      createdAt,
+      expiresAt,
+    });
   }
 
   async getSession(sessionId: string) {
@@ -23,6 +30,11 @@ export class SessionService implements ISessionService {
   async getUserFromSession(sessionId: string) {
     const session = await this.getSession(sessionId);
     if (!session) return null;
+
+    if (session.expiresAt < Date.now()) {
+      await this.deleteSession(sessionId);
+      return null;
+    }
 
     const userService = new UserService();
     return await userService.getUserById(session.userId);

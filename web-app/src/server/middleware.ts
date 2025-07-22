@@ -1,10 +1,9 @@
 import { createMiddleware, json } from "@tanstack/react-start";
-import { getHeader } from "@tanstack/react-start/server";
-import { parse } from "cookie-es";
 import { ZodError } from "zod";
 import { formatZodError } from "~/utils/zod";
 import { BadRequestError } from "./errors";
 import { SessionService } from "./services/SessionService";
+import { parseSession } from "./utils/session";
 
 export const loggingMiddleware = createMiddleware().server(
   async ({ next, data }) => {
@@ -42,8 +41,7 @@ export const errorHandlingMiddleware = createMiddleware().server(
 
 export const sessionRequiredMiddleware = createMiddleware().server(
   async ({ next }) => {
-    const cookies = parse(getHeader("Cookie") ?? "");
-    const sessionId = cookies.session_id;
+    const sessionId = parseSession();
 
     if (!sessionId) {
       throw json({}, { status: 401 });
