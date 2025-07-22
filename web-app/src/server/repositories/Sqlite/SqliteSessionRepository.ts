@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { getDatabase } from "../../db/config";
-import { Session } from "../../entities/Session";
+import { Session, SessionSchema } from "../../entities/Session";
 import { CreateSession, SessionRepository } from "../SessionRepository";
 
 export class SqliteSessionRepository implements SessionRepository {
@@ -22,14 +22,17 @@ export class SqliteSessionRepository implements SessionRepository {
       newSession.expiresAt
     );
 
-    return newSession;
+    return SessionSchema.parse(newSession);
   }
 
   async getSession(sessionId: string): Promise<Session | null> {
-    const stmt = this.db.prepare("SELECT * FROM sessions WHERE id = ?");
+    const stmt = this.db.prepare(
+      "SELECT id, user_id as userId, created_at as createdAt, expires_at as expiresAt FROM sessions WHERE id = ?"
+    );
     const result = stmt.get(sessionId) as Session | undefined;
+    if (!result) return null;
 
-    return result ?? null;
+    return SessionSchema.parse(result);
   }
 
   async deleteSession(sessionId: string): Promise<void> {

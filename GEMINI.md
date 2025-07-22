@@ -71,3 +71,9 @@ The login workflow shows an example of the complete base structure for pages and
     - UI component utils
   - web-app/src/server/utils/
     - Server specific utils
+
+### SQLite
+
+- The schema defines tables with snake_case column names
+- The SELECT queries should return columns aliased to camelCase names so they can be mapped to the objects
+- When queries get too long (more than 80 characters) break them down into multi-line queries

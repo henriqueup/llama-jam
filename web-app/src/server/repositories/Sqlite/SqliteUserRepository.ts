@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { getDatabase } from "~/server/db/config";
-import { User } from "~/server/entities/User";
+import { User, UserSchema } from "~/server/entities/User";
 import { IUserRepository } from "../UserRepository";
 
 export class SqliteUserRepository implements IUserRepository {
@@ -17,18 +17,26 @@ export class SqliteUserRepository implements IUserRepository {
     );
     stmt.run(newUser.id, newUser.email, newUser.passwordHash);
 
-    return newUser;
+    return UserSchema.parse(newUser);
   }
 
   async findById(id: string): Promise<User | null> {
-    const stmt = this.db.prepare("SELECT * FROM users WHERE id = ?");
+    const stmt = this.db.prepare(
+      "SELECT id, email, password_hash as passwordHash FROM users WHERE id = ?"
+    );
     const result = stmt.get(id) as User | undefined;
-    return result ?? null;
+    if (!result) return null;
+
+    return UserSchema.parse(result);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?");
+    const stmt = this.db.prepare(
+      "SELECT id, email, password_hash as passwordHash FROM users WHERE email = ?"
+    );
     const result = stmt.get(email) as User | undefined;
-    return result ?? null;
+    if (!result) return null;
+
+    return UserSchema.parse(result);
   }
 }
