@@ -13,3 +13,10 @@ export function parseSession() {
   const cookies = parse(getHeader("Cookie") ?? "");
   return cookies.session_id;
 }
+
+export function deleteSession() {
+  setHeader(
+    "Set-Cookie",
+    `session_id=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT`
+  );
+}

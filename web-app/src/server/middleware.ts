@@ -2,8 +2,6 @@ import { createMiddleware, json } from "@tanstack/react-start";
 import { ZodError } from "zod";
 import { formatZodError } from "~/utils/zod";
 import { BadRequestError } from "./errors";
-import { SessionService } from "./services/SessionService";
-import { parseSession } from "./utils/session";
 
 export const loggingMiddleware = createMiddleware().server(
   async ({ next, data }) => {
@@ -36,24 +34,5 @@ export const errorHandlingMiddleware = createMiddleware().server(
 
       throw error;
     }
-  }
-);
-
-export const sessionRequiredMiddleware = createMiddleware().server(
-  async ({ next }) => {
-    const sessionId = parseSession();
-
-    if (!sessionId) {
-      throw json({}, { status: 401 });
-    }
-
-    const sessionService = new SessionService();
-    const user = await sessionService.getUserFromSession(sessionId);
-
-    if (!user) {
-      throw json({}, { status: 401 });
-    }
-
-    return next({ context: { user } });
   }
 );

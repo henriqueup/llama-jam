@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { FieldErrors } from "~/components/forms";
 import { Button } from "~/components/ui/Button";
@@ -11,10 +11,21 @@ import { registerUser } from "~/server/functions/auth";
 
 export const Route = createFileRoute("/register")({
   component: RegisterComponent,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      redirectTo: (search.redirectTo as string) || "/",
+    };
+  },
 });
 
 function RegisterComponent() {
-  const mutation = useMutation({ mutationFn: useServerFn(registerUser) });
+  const { redirectTo } = Route.useSearch();
+  const mutation = useMutation({
+    mutationFn: useServerFn(registerUser),
+    onSuccess: () => {
+      throw redirect({ to: redirectTo });
+    },
+  });
 
   const form = useForm({
     defaultValues: {

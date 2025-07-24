@@ -1,6 +1,6 @@
 import { useForm, useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { FieldErrors, FormError } from "~/components/forms";
 import { Button } from "~/components/ui/Button";
@@ -11,13 +11,19 @@ import { loginUser } from "~/server/functions/auth";
 
 export const Route = createFileRoute("/login")({
   component: LoginComponent,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      redirectTo: (search.redirectTo as string) || "/",
+    };
+  },
 });
 
 function LoginComponent() {
+  const { redirectTo } = Route.useSearch();
   const mutation = useMutation({
     mutationFn: useServerFn(loginUser),
     onSuccess: () => {
-      throw redirect({ to: "/" });
+      throw redirect({ to: redirectTo });
     },
     onError: (error) => {
       form.setErrorMap({ onSubmit: { fields: {}, form: error.message } });
@@ -98,14 +104,21 @@ function LoginComponent() {
             </div>
           )}
         </form.Field>
-        <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit, isSubmitting]) => (
-            <Button type="submit" disabled={!canSubmit} className="min-w-20">
-              {isSubmitting ? "..." : "Submit"}
+        <div className="flex justify-between">
+          <Link to="/register" search={{ redirectTo }}>
+            <Button variant="outline" type="button">
+              Sign Up
             </Button>
-          )}
-        />
+          </Link>
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit, isSubmitting]) => (
+              <Button type="submit" disabled={!canSubmit} className="min-w-20">
+                {isSubmitting ? "..." : "Submit"}
+              </Button>
+            )}
+          />
+        </div>
         {formErrorMap.onSubmit ? (
           <FormError message={formErrorMap.onSubmit} />
         ) : null}

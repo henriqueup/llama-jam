@@ -10,9 +10,11 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Moon, Sun } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
+import { LoginButton } from "~/components/auth/LoginButton";
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
 import { Button } from "~/components/ui/Button";
+import { getCurrentUser } from "~/server/functions/auth";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 
@@ -56,6 +58,10 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
+  beforeLoad: async () => {
+    const currentUser = await getCurrentUser();
+    return { currentUser };
+  },
   errorComponent: (props) => {
     return (
       <RootDocument>
@@ -76,6 +82,7 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: ReactNode }) {
+  const { currentUser } = Route.useRouteContext();
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
@@ -119,9 +126,12 @@ function RootDocument({ children }: { children: ReactNode }) {
               Editor
             </Link>
           </div>
-          <Button variant="outline" size="icon-sm" onClick={toggleDarkMode}>
-            {isDarkTheme ? <Sun /> : <Moon />}
-          </Button>
+          <div className="flex items-center gap-4 justify-end">
+            <LoginButton currentUser={currentUser} />
+            <Button variant="outline" size="icon-sm" onClick={toggleDarkMode}>
+              {isDarkTheme ? <Sun /> : <Moon />}
+            </Button>
+          </div>
         </div>
         <hr />
         {children}
