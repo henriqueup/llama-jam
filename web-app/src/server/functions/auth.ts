@@ -1,12 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { BadRequestError } from "../errors";
-import { errorHandlingMiddleware, loggingMiddleware } from "../middleware";
+import { loggingMiddleware } from "../middleware";
 import { SessionService } from "../services/SessionService";
 import { UserService } from "../services/UserService";
 import { createSession, deleteSession, parseSession } from "../utils/session";
 
 export const registerUser = createServerFn({ method: "POST" })
-  .middleware([loggingMiddleware, errorHandlingMiddleware])
+  .middleware([loggingMiddleware])
   .validator((data) => {
     if (!(data instanceof FormData)) {
       throw new BadRequestError("Invalid data format");
@@ -32,7 +32,7 @@ export const registerUser = createServerFn({ method: "POST" })
   });
 
 export const loginUser = createServerFn({ method: "POST" })
-  .middleware([loggingMiddleware, errorHandlingMiddleware])
+  .middleware([loggingMiddleware])
   .validator((data) => {
     if (!(data instanceof FormData)) {
       throw new BadRequestError("Invalid data format");
@@ -58,7 +58,7 @@ export const loginUser = createServerFn({ method: "POST" })
   });
 
 export const getCurrentUser = createServerFn({ method: "GET" })
-  .middleware([loggingMiddleware, errorHandlingMiddleware])
+  .middleware([loggingMiddleware])
   .handler(async () => {
     const sessionId = parseSession();
     if (!sessionId) return null;
@@ -75,7 +75,7 @@ export const getCurrentUser = createServerFn({ method: "GET" })
   });
 
 export const logoutUser = createServerFn({ method: "POST" })
-  .middleware([loggingMiddleware, errorHandlingMiddleware])
+  .middleware([loggingMiddleware])
   .handler(async () => {
     const sessionId = parseSession();
     if (!sessionId) return;

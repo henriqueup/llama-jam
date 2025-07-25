@@ -27,6 +27,10 @@ export class UserService implements IUserService {
       passwordHash,
     });
 
+    if (!newUser) {
+      throw new BadRequestError("Email already in use");
+    }
+
     return this.omitPasswordHash(newUser);
   }
 

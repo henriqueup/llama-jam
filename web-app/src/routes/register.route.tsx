@@ -1,13 +1,14 @@
-import { useForm } from "@tanstack/react-form";
+import { useForm, useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { FieldErrors } from "~/components/forms";
+import { FieldErrors, FormError } from "~/components/forms";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
 import { Label } from "~/components/ui/Label";
 import { EmailSchema, PasswordSchema } from "~/server/entities/User";
 import { registerUser } from "~/server/functions/auth";
+import { parseErrorMessage } from "~/utils/errors";
 
 export const Route = createFileRoute("/register")({
   component: RegisterComponent,
@@ -23,7 +24,11 @@ function RegisterComponent() {
   const mutation = useMutation({
     mutationFn: useServerFn(registerUser),
     onSuccess: () => {
-      throw redirect({ to: redirectTo });
+      throw redirect({ to: redirectTo, replace: true });
+    },
+    onError: (error) => {
+      const errorMessage = parseErrorMessage(error);
+      form.setErrorMap({ onSubmit: { fields: {}, form: errorMessage } });
     },
   });
 
@@ -39,6 +44,8 @@ function RegisterComponent() {
       await mutation.mutateAsync({ data: formData });
     },
   });
+
+  const formErrorMap = useStore(form.store, (state) => state.errorMap);
 
   return (
     <div className="p-4 max-w-md mx-auto">
@@ -99,7 +106,19 @@ function RegisterComponent() {
             </div>
           )}
         </form.Field>
-        <Button type="submit">Register</Button>
+        <div className="flex justify-end">
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit, isSubmitting]) => (
+              <Button type="submit" disabled={!canSubmit} className="min-w-20">
+                {isSubmitting ? "..." : "Register"}
+              </Button>
+            )}
+          />
+        </div>
+        {formErrorMap.onSubmit ? (
+          <FormError message={formErrorMap.onSubmit} />
+        ) : null}
       </form>
     </div>
   );

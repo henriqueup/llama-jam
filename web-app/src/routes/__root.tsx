@@ -10,6 +10,7 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Moon, Sun } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
+import { Toaster } from "sonner";
 import { LoginButton } from "~/components/auth/LoginButton";
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
 import { NotFound } from "~/components/NotFound";
@@ -135,6 +136,7 @@ function RootDocument({ children }: { children: ReactNode }) {
         </div>
         <hr />
         {children}
+        <Toaster richColors closeButton />
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />

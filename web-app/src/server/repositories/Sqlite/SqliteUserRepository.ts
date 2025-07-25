@@ -6,7 +6,7 @@ import { IUserRepository } from "../UserRepository";
 export class SqliteUserRepository implements IUserRepository {
   private db = getDatabase();
 
-  async create(user: Omit<User, "id">): Promise<User> {
+  async create(user: Omit<User, "id">): Promise<User | null> {
     const newUser = {
       id: nanoid(),
       ...user,
@@ -15,7 +15,15 @@ export class SqliteUserRepository implements IUserRepository {
     const stmt = this.db.prepare(
       "INSERT INTO users (id, email, password_hash) VALUES (?, ?, ?)"
     );
-    stmt.run(newUser.id, newUser.email, newUser.passwordHash);
+
+    try {
+      stmt.run(newUser.id, newUser.email, newUser.passwordHash);
+    } catch (error: any) {
+      if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
+        return null;
+      }
+      throw error;
+    }
 
     return UserSchema.parse(newUser);
   }

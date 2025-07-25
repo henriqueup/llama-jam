@@ -8,6 +8,7 @@ import { Input } from "~/components/ui/Input";
 import { Label } from "~/components/ui/Label";
 import { EmailSchema, PasswordSchema } from "~/server/entities/User";
 import { loginUser } from "~/server/functions/auth";
+import { parseErrorMessage } from "~/utils/errors";
 
 export const Route = createFileRoute("/login")({
   component: LoginComponent,
@@ -23,10 +24,11 @@ function LoginComponent() {
   const mutation = useMutation({
     mutationFn: useServerFn(loginUser),
     onSuccess: () => {
-      throw redirect({ to: redirectTo });
+      throw redirect({ to: redirectTo, replace: true });
     },
     onError: (error) => {
-      form.setErrorMap({ onSubmit: { fields: {}, form: error.message } });
+      const errorMessage = parseErrorMessage(error);
+      form.setErrorMap({ onSubmit: { fields: {}, form: errorMessage } });
     },
   });
 
