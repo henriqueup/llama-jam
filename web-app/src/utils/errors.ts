@@ -1,7 +1,7 @@
 import { Redirect } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { ZodError } from "zod";
-import { BadRequestError } from "~/server/errors";
+import { BadRequestError, UnauthorizedError } from "~/server/errors";
 import { formatZodError } from "./zod";
 
 function isRedirect(error: unknown): error is Redirect {
@@ -11,6 +11,10 @@ function isRedirect(error: unknown): error is Redirect {
 export function parseErrorMessage(error: Error | Redirect) {
   if (isRedirect(error)) return null;
 
+  if (error instanceof UnauthorizedError || error.name === "UnauthorizedError") {
+    toast.warning("This functionality requires authorization.");
+    return null;
+  }
   if (error instanceof BadRequestError || error.name === "BadRequestError") {
     return error.message;
   }

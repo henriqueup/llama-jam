@@ -1,9 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { BadRequestError } from "../errors";
-import { loggingMiddleware } from "../middleware";
+import { authMiddleware, loggingMiddleware } from "../middleware";
 import { SessionService } from "../services/SessionService";
 import { UserService } from "../services/UserService";
-import { createSession, deleteSession, parseSession } from "../utils/session";
+import {
+  createSession,
+  deleteSession,
+  getCurrentUser as getCurrentUserUtil,
+  parseSession,
+} from "../utils/session";
 
 export const registerUser = createServerFn({ method: "POST" })
   .middleware([loggingMiddleware])
@@ -59,23 +64,10 @@ export const loginUser = createServerFn({ method: "POST" })
 
 export const getCurrentUser = createServerFn({ method: "GET" })
   .middleware([loggingMiddleware])
-  .handler(async () => {
-    const sessionId = parseSession();
-    if (!sessionId) return null;
-
-    const sessionService = new SessionService();
-    const user = await sessionService.getUserFromSession(sessionId);
-
-    if (!user) {
-      deleteSession();
-      return null;
-    }
-
-    return user;
-  });
+  .handler(getCurrentUserUtil);
 
 export const logoutUser = createServerFn({ method: "POST" })
-  .middleware([loggingMiddleware])
+  .middleware([loggingMiddleware, authMiddleware])
   .handler(async () => {
     const sessionId = parseSession();
     if (!sessionId) return;

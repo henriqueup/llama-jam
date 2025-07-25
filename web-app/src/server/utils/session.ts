@@ -20,3 +20,18 @@ export function deleteSession() {
     `session_id=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT`
   );
 }
+
+export async function getCurrentUser() {
+  const sessionId = parseSession();
+  if (!sessionId) return null;
+
+  const sessionService = new SessionService();
+  const user = await sessionService.getUserFromSession(sessionId);
+
+  if (!user) {
+    deleteSession();
+    return null;
+  }
+
+  return user;
+}

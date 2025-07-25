@@ -1,12 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import {
-  createFileRoute,
-  getRouteApi,
-  redirect,
-} from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect } from "react";
 import { logoutUser } from "~/server/functions/auth";
+import { parseErrorMessage } from "~/utils/errors";
 
 export const Route = createFileRoute("/logout")({
   component: LogoutComponent,
@@ -24,12 +21,15 @@ function LogoutComponent() {
     onSuccess: () => {
       throw redirect({ to: redirectTo, replace: true });
     },
+    onError: (error) => {
+      parseErrorMessage(error);
+      throw redirect({ to: redirectTo, replace: true });
+    },
   });
 
   useEffect(() => {
     logoutMutation.mutate({});
-  }, [logoutMutation]);
+  }, []);
 
   return <div>Login out...</div>;
 }
-
