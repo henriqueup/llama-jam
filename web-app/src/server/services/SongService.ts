@@ -1,3 +1,4 @@
+import { SqliteSongRepository } from "../repositories/Sqlite/SqliteSongRepository";
 import type { Song } from "../entities/Song";
 
 export interface ISongService {
@@ -9,28 +10,25 @@ export interface ISongService {
 }
 
 export class SongService implements ISongService {
+  constructor(private songRepository: SqliteSongRepository) {}
+
   async createSong(song: Omit<Song, "id">): Promise<Song> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.songRepository.create(song);
   }
 
   async getSongById(id: string): Promise<Song | null> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.songRepository.findById(id);
   }
 
   async getSongsByUserId(userId: string): Promise<Song[]> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.songRepository.findByUserId(userId);
   }
 
   async updateSong(id: string, song: Partial<Omit<Song, "id">>): Promise<Song> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.songRepository.update(id, song);
   }
 
   async deleteSong(id: string): Promise<void> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.songRepository.delete(id);
   }
 }

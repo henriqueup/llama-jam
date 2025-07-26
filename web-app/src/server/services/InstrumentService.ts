@@ -1,3 +1,4 @@
+import { SqliteInstrumentRepository } from "../repositories/Sqlite/SqliteInstrumentRepository";
 import type { Instrument } from "../entities/Instrument";
 
 export interface IInstrumentService {
@@ -8,31 +9,34 @@ export interface IInstrumentService {
     id: string,
     instrument: Partial<Omit<Instrument, "id">>
   ): Promise<Instrument>;
+  deleteInstrument(id: string): Promise<void>;
 }
 
 export class InstrumentService implements IInstrumentService {
+  constructor(private instrumentRepository: SqliteInstrumentRepository) {}
+
   async createInstrument(
     instrument: Omit<Instrument, "id">
   ): Promise<Instrument> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.instrumentRepository.create(instrument);
   }
 
   async getInstrumentById(id: string): Promise<Instrument | null> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.instrumentRepository.findById(id);
   }
 
   async getAllInstruments(): Promise<Instrument[]> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.instrumentRepository.findAll();
   }
 
   async updateInstrument(
     id: string,
     instrument: Partial<Omit<Instrument, "id">>
   ): Promise<Instrument> {
-    // Implementation to be added
-    throw new Error("Not implemented");
+    return this.instrumentRepository.update(id, instrument);
+  }
+
+  async deleteInstrument(id: string): Promise<void> {
+    return this.instrumentRepository.delete(id);
   }
 }
