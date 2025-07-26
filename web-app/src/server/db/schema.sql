@@ -71,3 +71,13 @@ CREATE INDEX IF NOT EXISTS idx_sheets_song ON sheets(song_id);
 CREATE INDEX IF NOT EXISTS idx_bars_sheet ON bars(sheet_id);
 CREATE INDEX IF NOT EXISTS idx_notes_bar ON notes(bar_id);
 CREATE INDEX IF NOT EXISTS idx_songs_search ON songs(title, artist);
+
+-- Sessions table
+CREATE TABLE IF NOT EXISTS sessions (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  created_at INTEGER NOT NULL, -- Unix timestamp
+  expires_at INTEGER NOT NULL, -- Unix timestamp
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+

@@ -1,11 +1,17 @@
 import { createServerFn } from "@tanstack/react-start";
-import bcrypt from "bcrypt";
 import { BadRequestError } from "../errors";
-import { errorHandlingMiddleware, loggingMiddleware } from "../middleware";
+import { authMiddleware, loggingMiddleware } from "../middleware";
+import { SessionService } from "../services/SessionService";
 import { UserService } from "../services/UserService";
+import {
+  createSession,
+  deleteSession,
+  getCurrentUser as getCurrentUserUtil,
+  parseSession,
+} from "../utils/session";
 
 export const registerUser = createServerFn({ method: "POST" })
-  .middleware([loggingMiddleware, errorHandlingMiddleware])
+  .middleware([loggingMiddleware])
   .validator((data) => {
     if (!(data instanceof FormData)) {
       throw new BadRequestError("Invalid data format");
@@ -26,12 +32,12 @@ export const registerUser = createServerFn({ method: "POST" })
     const userService = new UserService();
     const user = await userService.createUser({ email, password });
 
-    // Here you would typically create a session as well
+    createSession(user.id);
     return { id: user.id, email: user.email };
   });
 
 export const loginUser = createServerFn({ method: "POST" })
-  .middleware([loggingMiddleware, errorHandlingMiddleware])
+  .middleware([loggingMiddleware])
   .validator((data) => {
     if (!(data instanceof FormData)) {
       throw new BadRequestError("Invalid data format");
@@ -50,18 +56,24 @@ export const loginUser = createServerFn({ method: "POST" })
   })
   .handler(async ({ data: { email, password } }) => {
     const userService = new UserService();
-    const user = await userService.getUserByEmail(email);
+    const user = await userService.authenticateUser(email, password);
 
-    if (!user) {
-      throw new BadRequestError("Invalid email or password");
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
-
-    if (!passwordMatch) {
-      throw new BadRequestError("Invalid email or password");
-    }
-
-    // Here you would typically create a session and return a session token
+    createSession(user.id);
     return { id: user.id, email: user.email };
+  });
+
+export const getCurrentUser = createServerFn({ method: "GET" })
+  .middleware([loggingMiddleware])
+  .handler(getCurrentUserUtil);
+
+export const logoutUser = createServerFn({ method: "POST" })
+  .middleware([loggingMiddleware, authMiddleware])
+  .handler(async () => {
+    const sessionId = parseSession();
+    if (!sessionId) return;
+
+    const sessionService = new SessionService();
+    await sessionService.deleteSession(sessionId);
+
+    deleteSession();
   });
